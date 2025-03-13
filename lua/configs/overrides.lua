@@ -52,6 +52,9 @@ M.mason = {
     "gopls",
     "golines",
     "gofumpt",
+
+    -- htmx
+    "htmx-lsp",
   },
 }
 

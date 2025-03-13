@@ -2,68 +2,56 @@
 require("nvchad.configs.lspconfig").defaults()
 
 local lspconfig = require "lspconfig"
-
--- EXAMPLE
-local servers = { "html", "cssls", "ts_ls", "terraformls", "pyright" , "zls", "templ", "pbls"}
 local nvlsp = require "nvchad.configs.lspconfig"
 
--- lsps with default config
-for _, lsp in ipairs(servers) do
-  lspconfig[lsp].setup {
-    on_attach = nvlsp.on_attach,
-    on_init = nvlsp.on_init,
-    capabilities = nvlsp.capabilities,
-  }
-end
-
-lspconfig.gopls.setup({
+-- EXAMPLE
+local servers = {
+  html = {
     on_attach = nvlsp.on_attach,
     capabilities = nvlsp.capabilities,
     on_init = nvlsp.on_init,
-  	settings = {
-    gopls = {
-      annotations = {
-        escape = true,
-      },
-      codelenses = {
-        generate = false,
-        gc_details = true,
-      }
-    },
-	},
-})
-
-lspconfig.html.setup({
-  on_attach = nvlsp.on_attach,
-  capabilities = nvlsp.capabilities,
-  on_init = nvlsp.on_init,
-  filetypes = { "html", "templ" },
-})
-
-lspconfig.htmx.setup({
-  on_attach = nvlsp.on_attach,
-  capabilities = nvlsp.capabilities,
-  on_init = nvlsp.on_init,
-  filetypes = { "html", "templ" },
-})
-
-lspconfig.tailwindcss.setup({
-  on_attach = nvlsp.on_attach,
-  capabilities = nvlsp.capabilities,
-  on_init = nvlsp.on_init,
-  filetypes = { "templ", "html", "css", "scss", "javascript", "typescript", "javascriptreact", "typescriptreact" },
-  settings = {
-    tailwindCSS = {
-      includeLanguages = {
-        templ = "html",
+    filetypes = { "html", "templ" },
+  },
+  htmx = {
+    filetypes = { "html", "templ" },
+  },
+  tailwindcss = {
+    filetypes = { "templ", "html", "css", "scss", "javascript", "typescript", "javascriptreact", "typescriptreact" },
+    settings = {
+      tailwindCSS = {
+        includeLanguages = {
+          templ = "html",
+        },
       },
     },
   },
-})
+  cssls = {},
+  ts_ls = {},
+  terraformls = {},
+  pyright = {},
+  zls = {},
+  templ = {},
+  pbls = {},
+  gopls = {
+  	settings = {
+      gopls = {
+        annotations = {
+          escape = true,
+        },
+        codelenses = {
+          generate = false,
+          gc_details = true,
+        }
+      },
+	  },
+  },
+}
 
--- configuring single server, example: typescript
--- lspconfig.ts_ls.setup {
---   on_attach = nvlsp.on_attach,
---   on_init = nvlsp.on_init,
---   capabilities = nvlsp.capabilities,
--- }
+for name, opts in pairs(servers) do
+  opts.on_init = nvlsp.on_init
+  opts.on_attach = nvlsp.on_attach
+  opts.capabilities = nvlsp.capabilities
+
+  require("lspconfig")[name].setup(opts)
+end
+
