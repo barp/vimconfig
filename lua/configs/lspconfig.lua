@@ -27,6 +27,12 @@ local servers = {
   },
   cssls = {},
   ts_ls = {},
+  eslint = {
+    settings = {
+      workingDirectories = { mode = "auto" },
+      format = true,
+    },
+  },
   terraformls = {},
   pyright = {},
   zls = {},
@@ -52,6 +58,6 @@ for name, opts in pairs(servers) do
   opts.on_attach = nvlsp.on_attach
   opts.capabilities = nvlsp.capabilities
 
-  require("lspconfig")[name].setup(opts)
+  lspconfig[name].setup(opts)
 end
 
